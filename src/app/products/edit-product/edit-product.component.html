@@ -1,0 +1,15 @@
+<p-sidebar [(visible)]="display" position="left" styleClass="sidebar" appendTo="body" modal="true" (onHide)="onSlideBarHide()">
+  <div class="form-group">
+    <p># {{product.id}}</p>
+    <label>Name</label>
+    <input type="text" class="form-control" value="{{product.first_name}}" #productName>
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <input type="text" class="form-control" value="{{product.last_name}}" #productDescription>
+  </div>
+  <button class="btn btn-primary" (click)="startEditing()">Edit</button>
+  <button class="btn btn-danger" (click)="display = false" pButton>
+    Close
+  </button>
+</p-sidebar>
