@@ -7,15 +7,16 @@
             <tr>
               <th scope="col">id</th>
               <th scope="col">Name</th>
-              <th scope="col"><button type="button" class="btn btn-success btn-sm float-right">Add</button></th>
+              <th scope="col"><button type="button" class="btn btn-success btn-sm float-right" [routerLink]="[{ outlets: { sidebar: [ 'create'] }}]">Add</button></th>
             </tr>
           </thead>
           <tbody>
-            <tr app-row-item *ngFor="let product of products" [product]="product" (productDeleted)="deleteProduct($event)"
-              (productEdited)="editProduct($event)"></tr>
+            <app-row-item *ngFor="let product of products" [product]="product" (productDeleted)="deleteProduct($event)"
+              class="row-table"></app-row-item>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </section>
+<router-outlet name="sidebar" (deactivate)='onDeactivate($event)'></router-outlet>

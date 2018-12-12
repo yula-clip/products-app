@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../service/product.service';
 import { Product } from '../models/product.model';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -26,37 +25,36 @@ export class ProductsComponent implements OnInit {
   private loadProducts() {
     this.serv.getProducts()
       .subscribe((data: Product[]) => {
-        this.products = data.data;
+        this.products = data;
       });
   }
 
-  addProduct() {
-    this.editedProduct = new Product(0, '', '');
-    this.products.push(this.editedProduct);
+  addProduct(product: Product) {
     this.isNewRecord = true;
+    this.saveProduct();
+    this.products.push(product);
   }
-
 
   editProduct(product: Product) {
     this.editedProduct = new Product(product.id, product.first_name, product.last_name);
     this.saveProduct();
+    // tslint:disable-next-line:triple-equals
+    const index = this.products.findIndex(prod => prod.id == product.id);
+    this.products.splice(index, 1, product);
   }
 
   saveProduct() {
     if (this.isNewRecord) {
       this.serv.createProduct(this.editedProduct).subscribe(data => {
         this.statusMessage = 'Added success!',
-          // this.loadProducts();
-        console.log(this.statusMessage);
+          this.isNewRecord = false;
+        this.editedProduct = null;
       });
-      this.isNewRecord = false;
-      this.editedProduct = null;
     } else {
-    this.serv.updateProduct(this.editedProduct.id, this.editedProduct).subscribe(data => {
-        this.statusMessage = 'Edited success!',
-          console.log(data);
+      this.serv.updateProduct(this.editedProduct.id, this.editedProduct).subscribe((data: Product) => {
+        this.statusMessage = 'Edited success!';
+        this.editedProduct = null;
       });
-      this.editedProduct = null;
     }
   }
 
@@ -66,5 +64,18 @@ export class ProductsComponent implements OnInit {
       this.statusMessage = 'Product id = ' + product.id + ' deleted success!',
         this.products.splice(index, 1);
     });
+  }
+
+  onDeactivate(component) {
+    if (component.isAdd) {
+      this.editedProduct = new Product(this.products.length + 1,
+        component.productForm.value.first_name, component.productForm.value.last_name);
+      this.addProduct(this.editedProduct);
+    }
+    if (component.isSave) {
+      this.editedProduct = new Product(component.productForm.value.id,
+        component.productForm.value.first_name, component.productForm.value.last_name);
+      this.editProduct(this.editedProduct);
+    }
   }
 }

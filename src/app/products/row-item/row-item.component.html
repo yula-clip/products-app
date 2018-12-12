@@ -1,12 +1,12 @@
-<th scope="row">{{product.id}}</th>
-<td>{{product.first_name}}
-</td>
-<td>
-  <div class="float-right">
-    <button type="button" class="btn btn-info btn-sm btn-tr" [routerLink]="[{ outlets: { 'view': [ 'details', product.id] }}]">Detail</button>
-    <button type="button" class="btn btn-primary btn-sm btn-tr" [routerLink]="[{ outlets: { 'editing': [ 'edit', product.id] }}]">Edit</button>
-    <button type="button" class="btn btn-danger btn-sm btn-tr" (click)="productDelete()">Delete</button>
-  </div>
-</td>
-<router-outlet name="view"></router-outlet>
-<router-outlet name="editing"></router-outlet>
+<tr>
+  <th scope="row">{{product.id}}</th>
+  <td>{{product.first_name}}
+  </td>
+  <td>
+    <div class="float-right">
+      <button type="button" class="btn btn-info btn-sm btn-tr" (click)="routerOutlet('details',product.id)">Detail</button>
+      <button type="button" class="btn btn-primary btn-sm btn-tr" (click)="routerOutlet('edit',product.id)">Edit</button>
+      <button type="button" class="btn btn-danger btn-sm btn-tr" (click)="productDelete()">Delete</button>
+    </div>
+  </td>
+</tr>

@@ -11,6 +11,7 @@ import { ProductDetailComponent } from './products/product-detail/product-detail
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { EditProductComponent } from './products/edit-product/edit-product.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { EditProductComponent } from './products/edit-product/edit-product.compo
     FormsModule,
     HttpClientModule,
     HttpModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

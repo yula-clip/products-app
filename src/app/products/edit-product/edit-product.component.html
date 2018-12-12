@@ -1,15 +1,26 @@
 <p-sidebar [(visible)]="display" position="left" styleClass="sidebar" appendTo="body" modal="true" (onHide)="onSlideBarHide()">
-  <div class="form-group">
-    <p># {{product.id}}</p>
-    <label>Name</label>
-    <input type="text" class="form-control" value="{{product.first_name}}" #productName>
-  </div>
-  <div class="form-group">
-    <label>Description</label>
-    <input type="text" class="form-control" value="{{product.last_name}}" #productDescription>
-  </div>
-  <button class="btn btn-primary" (click)="startEditing()">Edit</button>
-  <button class="btn btn-danger" (click)="display = false" pButton>
-    Close
-  </button>
+  <form [formGroup]="productForm" novalidate (ngSubmit)="submit()">
+    <div class="form-group">
+      <label>*Name</label>
+      <input class="form-control" name="fname" formControlName="first_name" />
+      <div class="alert alert-danger" *ngIf="productForm.controls['first_name'].invalid && productForm.controls['first_name'].touched">
+        Incorrect name
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Last name</label>
+      <input class="form-control" name="lname" formControlName="last_name" />
+      <div class="alert alert-danger" *ngIf="productForm.controls['last_name'].invalid && productForm.controls['last_name'].touched">
+        Incorrect last name
+      </div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" [disabled]="productForm.invalid">
+        Save
+      </button>
+      <button class="btn btn-danger" (click)="display = false" pButton>
+        Cancel
+      </button>
+    </div>
+  </form>
 </p-sidebar>

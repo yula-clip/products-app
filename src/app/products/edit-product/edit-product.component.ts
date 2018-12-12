@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../service/product.service';
 import { Product } from '../../models/product.model';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { switchMap, mapTo } from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-product',
@@ -11,38 +12,76 @@ import { Product } from '../../models/product.model';
   styleUrls: ['./edit-product.component.sass']
 })
 export class EditProductComponent implements OnInit, OnDestroy {
-  @Output() productEdit = new EventEmitter<Product>();
   public id: number;
-  display = false;
+  display: boolean;
   product: Product;
-  newProduct: Product;
-  statusMessage: string;
+  isSave: boolean;
+  isAdd: boolean;
+  isNewProduct: boolean;
   private paramsSubscription: Subscription;
+  productForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, private router: Router, private serv: ProductService) {
-    this.product = new Product(null, '' , '');
-  }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private serv: ProductService,
+    private formBuilderService: FormBuilder) { }
+
   ngOnInit() {
+    this.display = false;
+    this.isSave = false;
+    this.isAdd = false;
+    this.isNewProduct = false;
     this.paramsSubscription = this.route.params.subscribe(params => this.id = params['id']);
-    this.loadProduct(this.id);
-    this.display = true;
+    this.productForm = this.buildFormGroup();
+    if (!this.id) {
+      this.isNewProduct = true;
+      this.display = true;
+      return;
+    }
+    this.serv.getProduct(this.id)
+      .pipe(
+        switchMap((data: Product) => this.serv.getProduct(this.id).pipe(mapTo(this.product = data)))
+      )
+      .subscribe(product => {
+        this.productForm.reset(product);
+        this.display = true;
+      });
   }
+
   ngOnDestroy() {
     this.paramsSubscription.unsubscribe();
   }
 
-  private loadProduct(id) {
-    this.serv.getProduct(id)
-      .subscribe((data: Product) => {
-        this.product = data.data;
-      });
+  private buildFormGroup(): FormGroup {
+    return this.formBuilderService.group({
+      id: [null],
+      first_name: [null, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(40)
+      ]],
+      last_name: [null, [
+        Validators.required
+      ]]
+    });
   }
 
-  startEditing() {
-    this.productEdit.emit(this.newProduct);
+  submit() {
+    if (this.isNewProduct) {
+      this.isAdd = true;
+      this.display = false;
+    } else {
+      this.isSave = true;
+      this.display = false;
+    }
+  }
+
+  outletsNull(name) {
+    this.router.navigate(['/products', { outlets: { [name]: null } }]);
   }
 
   onSlideBarHide() {
-    this.router.navigate(['/products', { outlets: { editing: null } }]);
+    this.outletsNull('sidebar');
   }
 }

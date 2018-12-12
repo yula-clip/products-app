@@ -13,12 +13,17 @@ const routes: Routes =   [
       {
         path: 'details/:id',
         component: ProductDetailComponent,
-        outlet: 'view'
+        outlet: 'sidebar'
       },
       {
         path: 'edit/:id',
         component: EditProductComponent,
-        outlet: 'editing'
+        outlet: 'sidebar'
+      },
+      {
+        path: 'create',
+        component: EditProductComponent,
+        outlet: 'sidebar'
       },
     ]
   },
@@ -28,7 +33,6 @@ const routes: Routes =   [
   },
   { path: '**', redirectTo: '/products', }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
