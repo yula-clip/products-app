@@ -35,7 +35,6 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: '/products',
-    pathMatch: 'full'
   }
 ];
 
