@@ -31,7 +31,7 @@ const routes: Routes =   [
     redirectTo: '/products',
     pathMatch: 'full'
   },
-  { path: '**', redirectTo: '/products', }
+  { path: '**', redirectTo: '', }
 ];
 
 @NgModule({
