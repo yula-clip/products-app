@@ -4,7 +4,7 @@ import { ProductsComponent } from './products/products.component';
 import { ProductDetailComponent } from './products/product-detail/product-detail.component';
 import { EditProductComponent } from './products/edit-product/edit-product.component';
 
-const routes: Routes =   [
+const routes: Routes = [
   {
     path: 'products',
     component: ProductsComponent,
@@ -27,11 +27,16 @@ const routes: Routes =   [
       },
     ]
   },
-  { path: '',
+  {
+    path: '',
     redirectTo: '/products',
     pathMatch: 'full'
   },
-  { path: '**', redirectTo: '/products', }
+  {
+    path: '**',
+    redirectTo: '/products',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
